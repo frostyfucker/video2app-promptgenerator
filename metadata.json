@@ -1,0 +1,5 @@
+{
+  "name": "Video to App Prompt Generator",
+  "description": "Upload a video describing a web application idea. This tool analyzes the video frames and generates a detailed, structured prompt that you can use with an LLM to kickstart the development process.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video to App Prompt Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-bg': '#111827',
+              'brand-surface': '#1f2937',
+              'brand-border': '#374151',
+              'brand-text': '#f9fafb',
+              'brand-text-secondary': '#9ca3af',
+              'brand-primary': '#2563eb',
+              'brand-primary-hover': '#1d4ed8',
+              'brand-accent': '#34d399',
+            },
+          },
+        },
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.10.0",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-brand-bg text-brand-text">
+    <div id="root"></div>
+  </body>
+</html>
