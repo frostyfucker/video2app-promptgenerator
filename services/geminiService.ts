@@ -100,3 +100,34 @@ ${getPromptStructure()}
         handleApiError(error);
     }
 };
+
+export const refinePrompt = async (originalPrompt: string, feedback: string): Promise<AnalysisResult> => {
+  const systemPrompt = `
+You are an expert prompt engineer. Your task is to refine an existing project prompt based on user feedback.
+The user wants to modify the following prompt:
+
+---
+**ORIGINAL PROMPT:**
+${originalPrompt}
+---
+
+**USER'S REFINEMENT REQUEST:**
+"${feedback}"
+
+Your goal is to generate a new, complete prompt that incorporates the user's request.
+You MUST maintain the exact same Markdown structure as the original prompt (e.g., ### 1. App Overview, ### 2. Core Features, etc.).
+Do not add any conversational text, greetings, or explanations before or after the refined prompt. Output ONLY the complete, refined prompt in clean Markdown.
+`;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: model,
+      contents: systemPrompt,
+    });
+    
+    // Refinement doesn't generate new sources.
+    return { prompt: response.text, sources: [] };
+  } catch (error: any) {
+    handleApiError(error);
+  }
+};

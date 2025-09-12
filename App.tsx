@@ -5,7 +5,7 @@ import { VideoUploader } from './components/VideoUploader';
 import { ResultDisplay } from './components/ResultDisplay';
 import { LoadingView } from './components/LoadingView';
 import { useVideoProcessor } from './hooks/useVideoProcessor';
-import { analyzeVideoFrames, analyzeYouTubeVideo } from './services/geminiService';
+import { analyzeVideoFrames, analyzeYouTubeVideo, refinePrompt } from './services/geminiService';
 import { ErrorIcon } from './components/icons';
 import { WebcamRecorder } from './components/WebcamRecorder';
 
@@ -93,13 +93,37 @@ const App: React.FC = () => {
     setSources(null);
     setViewMode('uploader');
   }, []);
+  
+  const handlePromptRefinement = async (feedback: string) => {
+    if (isLoading || !generatedPrompt) return;
+
+    setError(null);
+    setIsLoading(true);
+    setProgressMessage('Refining prompt based on your feedback...');
+
+    try {
+      const { prompt: newPrompt } = await refinePrompt(generatedPrompt, feedback);
+      setGeneratedPrompt(newPrompt);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'An unknown error occurred during refinement.');
+    } finally {
+      setIsLoading(false);
+      setProgressMessage('');
+    }
+  };
 
   const renderContent = () => {
     if (isLoading) {
       return <LoadingView message={progressMessage} />;
     }
     if (generatedPrompt) {
-      return <ResultDisplay prompt={generatedPrompt} sources={sources} onReset={handleReset} />;
+      return <ResultDisplay 
+                prompt={generatedPrompt} 
+                sources={sources} 
+                onReset={handleReset}
+                onRefine={handlePromptRefinement}
+             />;
     }
     if (viewMode === 'recorder') {
       return (
