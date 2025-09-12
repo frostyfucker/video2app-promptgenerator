@@ -5,8 +5,11 @@ import { VideoUploader } from './components/VideoUploader';
 import { ResultDisplay } from './components/ResultDisplay';
 import { LoadingView } from './components/LoadingView';
 import { useVideoProcessor } from './hooks/useVideoProcessor';
-import { analyzeVideoFrames } from './services/geminiService';
+import { analyzeVideoFrames, analyzeYouTubeVideo } from './services/geminiService';
 import { ErrorIcon } from './components/icons';
+import { WebcamRecorder } from './components/WebcamRecorder';
+
+type ViewMode = 'uploader' | 'recorder';
 
 const App: React.FC = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -14,6 +17,8 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [progressMessage, setProgressMessage] = useState<string>('');
+  const [viewMode, setViewMode] = useState<ViewMode>('uploader');
+  const [sources, setSources] = useState<any[] | null>(null);
   
   const { processVideo } = useVideoProcessor();
 
@@ -24,6 +29,8 @@ const App: React.FC = () => {
     setGeneratedPrompt('');
     setError(null);
     setIsLoading(true);
+    setSources(null);
+    setViewMode('uploader'); // Ensure view is reset
 
     try {
       setProgressMessage('Extracting frames from video...');
@@ -36,8 +43,9 @@ const App: React.FC = () => {
       }
 
       setProgressMessage('Analyzing frames with AI...');
-      const prompt = await analyzeVideoFrames(frames);
+      const { prompt, sources } = await analyzeVideoFrames(frames);
       setGeneratedPrompt(prompt);
+      setSources(sources);
       
     } catch (err: any) {
       console.error(err);
@@ -48,12 +56,68 @@ const App: React.FC = () => {
     }
   };
 
+  const handleYouTubeUrlSubmit = async (url: string) => {
+    if (isLoading) return;
+
+    setVideoFile(null);
+    setGeneratedPrompt('');
+    setError(null);
+    setIsLoading(true);
+    setSources(null);
+    setViewMode('uploader');
+    setProgressMessage('Analyzing YouTube video with AI...');
+
+    try {
+        const { prompt, sources } = await analyzeYouTubeVideo(url);
+        setGeneratedPrompt(prompt);
+        setSources(sources);
+    } catch (err: any) {
+        console.error(err);
+        setError(err.message || 'An unknown error occurred while analyzing the URL.');
+    } finally {
+        setIsLoading(false);
+        setProgressMessage('');
+    }
+  };
+
+
+  const handleRecordingComplete = (videoFile: File) => {
+    handleVideoUpload(videoFile);
+  };
+
   const handleReset = useCallback(() => {
     setVideoFile(null);
     setGeneratedPrompt('');
     setError(null);
     setIsLoading(false);
+    setSources(null);
+    setViewMode('uploader');
   }, []);
+
+  const renderContent = () => {
+    if (isLoading) {
+      return <LoadingView message={progressMessage} />;
+    }
+    if (generatedPrompt) {
+      return <ResultDisplay prompt={generatedPrompt} sources={sources} onReset={handleReset} />;
+    }
+    if (viewMode === 'recorder') {
+      return (
+        <WebcamRecorder
+          onRecordingComplete={handleRecordingComplete}
+          onCancel={() => setViewMode('uploader')}
+        />
+      );
+    }
+    return (
+      <VideoUploader
+        onVideoUpload={handleVideoUpload}
+        disabled={isLoading}
+        onSwitchToRecorder={() => setViewMode('recorder')}
+        onYouTubeUrlSubmit={handleYouTubeUrlSubmit}
+      />
+    );
+  };
 
   return (
     <div className="min-h-screen bg-brand-bg font-sans flex flex-col items-center p-4 sm:p-6 lg:p-8">
@@ -69,14 +133,7 @@ const App: React.FC = () => {
               </div>
             </div>
           )}
-
-          {isLoading ? (
-            <LoadingView message={progressMessage} />
-          ) : generatedPrompt ? (
-            <ResultDisplay prompt={generatedPrompt} onReset={handleReset} />
-          ) : (
-            <VideoUploader onVideoUpload={handleVideoUpload} disabled={isLoading} />
-          )}
+          {renderContent()}
         </main>
       </div>
        <footer className="w-full max-w-4xl mx-auto text-center mt-12 text-brand-text-secondary text-sm">

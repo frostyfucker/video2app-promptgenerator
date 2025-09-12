@@ -1,7 +1,7 @@
-
 import React from 'react';
 
 export const FilmIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  // FIX: Corrected incomplete viewBox attribute from '0 0 24' to '0 0 24 24'.
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
     <line x1="7" y1="2" x2="7" y2="22"></line>
@@ -15,6 +15,7 @@ export const FilmIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 );
 
 export const UploadIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  // FIX: Corrected malformed viewBox attribute from '0 0 24" 24"' to '0 0 24 24'.
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
     <polyline points="17 8 12 3 7 8"></polyline>
@@ -48,6 +49,13 @@ export const CheckIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
+export const CameraIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+    <circle cx="12" cy="13" r="3"></circle>
+  </svg>
+);
+
 export const RefreshIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"></path>
@@ -78,4 +86,18 @@ export const ErrorIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <line x1="12" y1="8" x2="12" y2="12"></line>
     <line x1="12" y1="16" x2="12.01" y2="16"></line>
   </svg>
+);
+
+export const YouTubeIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21.54 6.42a2.49 2.49 0 0 0-1.76-1.76C18.25 4.25 12 4.25 12 4.25s-6.25 0-7.78.41a2.49 2.49 0 0 0-1.76 1.76C2 7.94 2 12 2 12s0 4.06.46 5.58a2.49 2.49 0 0 0 1.76 1.76c1.53.41 7.78.41 7.78.41s6.25 0 7.78-.41a2.49 2.49 0 0 0 1.76-1.76c.46-1.52.46-5.58.46-5.58s0-4.06-.46-5.58z"></path>
+        <polygon points="9.5 15.5 15.5 12 9.5 8.5 9.5 15.5"></polygon>
+    </svg>
+);
+
+export const LinkIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"></path>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"></path>
+    </svg>
 );

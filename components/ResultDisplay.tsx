@@ -1,14 +1,15 @@
 
-import React, 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
-import { CopyIcon, CheckIcon, RefreshIcon, WandIcon } from './icons';
+import { CopyIcon, CheckIcon, RefreshIcon, WandIcon, LinkIcon } from './icons';
 
 interface ResultDisplayProps {
   prompt: string;
   onReset: () => void;
+  sources?: any[] | null;
 }
 
-export const ResultDisplay: React.FC<ResultDisplayProps> = ({ prompt, onReset }) => {
+export const ResultDisplay: React.FC<ResultDisplayProps> = ({ prompt, onReset, sources }) => {
   const [hasCopied, setHasCopied] = useState(false);
 
   const handleCopy = () => {
@@ -57,6 +58,32 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({ prompt, onReset })
             </code>
         </pre>
       </div>
+
+      {sources && sources.length > 0 && (
+        <div className="p-4 sm:p-6 border-t border-brand-border">
+          <h3 className="flex items-center text-lg font-semibold text-brand-text mb-3">
+            <LinkIcon className="w-5 h-5 mr-2 text-brand-text-secondary" />
+            Sources
+          </h3>
+          <ul className="space-y-2">
+            {sources.map((source, index) => (
+              source.web && (
+                <li key={index} className="text-sm">
+                  <a
+                    href={source.web.uri}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-brand-primary hover:underline hover:text-blue-400 transition-colors break-all"
+                    title={source.web.uri}
+                  >
+                    {index + 1}. {source.web.title || source.web.uri}
+                  </a>
+                </li>
+              )
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
